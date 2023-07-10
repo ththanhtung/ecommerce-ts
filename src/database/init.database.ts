@@ -1,8 +1,9 @@
 import mongoose from 'mongoose';
-import dotenv from 'dotenv'
+import dotenv from 'dotenv';
 import { countConnection } from '../helpers/check.connection';
+import config from '../config/config.mongodb';
 
-dotenv.config()
+dotenv.config();
 
 class Database {
   private static instance: Database;
@@ -18,16 +19,11 @@ class Database {
   }
 
   connect() {
-    if (!process.env.MONGO_URI) {
-      throw new Error('Mongo uri must be provided!');
-    }
-    if (!process.env.DB_NAME) {
-      throw new Error('database name must be provided!');
-    }
     try {
-      mongoose.connect(process.env.MONGO_URI + '/' + process.env.DB_NAME);
+      const { host, port, name } = config.database;
+      mongoose.connect(`${host}:${port}/${name}`);
       console.log('connected to mongodb');
-      countConnection()
+      countConnection();
     } catch (error) {
       console.log('error occurred while connecting to mongodb:', error);
     }

@@ -1,5 +1,6 @@
 import { app } from './src/app';
 import dotenv from 'dotenv';
+import config from './src/config/config.mongodb';
 
 dotenv.config();
 
@@ -8,7 +9,7 @@ const start = () => {
     throw new Error('port must be provided');
   }
 
-  const server = app.listen(process.env.PORT, () => {
+  const server = app.listen(config.app.port, () => {
     console.log('server is running on port', process.env.PORT);
   });
 
