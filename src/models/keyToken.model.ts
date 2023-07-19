@@ -6,13 +6,17 @@ const DOCUMENT_NAME = 'key_token';
 interface KeytokenAttrs {
   userId: string;
   publicKey: string;
-  refeshToken?: string[];
+  privateKey: string;
+  refeshTokensUsed?: string[];
+  refeshToken: string;
 }
 
 interface KeytokenDocs extends mongoose.Document {
   userId: string;
-  publicKey: string[];
-  refeshToken: string[];
+  publicKey: string;
+  privateKey: string;
+  refeshTokensUsed?: string[];
+  refeshToken: string;
 }
 
 interface KeytokenModel extends mongoose.Model<KeytokenDocs> {
@@ -30,9 +34,17 @@ const keytokenSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    refeshToken: {
+    privateKey: {
+      type: String,
+      required: true,
+    },
+    refeshTokensUsed: {
       type: Array,
       default: [],
+    },
+    refeshToken: {
+      type: String,
+      required: true,
     },
   },
   {

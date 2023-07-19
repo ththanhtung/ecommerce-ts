@@ -8,7 +8,7 @@ const router = express.Router()
 router.use(checkAuth)
 
 // check permission
-router.use(permission('005'))
+router.use(permission('001'))
 
 router.use('/v1/api', authRoutes)
 

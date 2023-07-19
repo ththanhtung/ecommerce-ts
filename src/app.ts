@@ -1,10 +1,11 @@
-import express, { NextFunction, Request, Response } from 'express'
+import express from 'express'
 import morgan from 'morgan'
 import helmet from 'helmet'
 import compression from 'compression'
 import { dbInstance } from './database/init.database'
 import { OverloadCheck } from './helpers/check.connection'
 import { router } from './routes'
+import { errorHandler } from './middlewares/errorsHander'
 
 
 const app = express()
@@ -24,6 +25,8 @@ const db = dbInstance
 
 // init routes
 app.use(router)
+
+app.use(errorHandler)
 
 export {
     app
