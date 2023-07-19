@@ -1,4 +1,4 @@
-import mongoose, { mongo } from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
 const COLLECTION_NAME = 'products';
 const DOCUMENT_NAME = 'product';
@@ -34,26 +34,27 @@ const productSchema = new mongoose.Schema({
     },
     product_desc:{
         type: String,
-        required: true
     },
     product_price:{
-        type: String,
+        type: Number,
         required: true
     },
     product_quantity:{
-        type: String,
-        required: true
+        type: Number,
+        required: true,
     },
     product_type:{
         type: String,
-        required: true
+        required: true,
+        enum:['Electronic','Clothing','Funiture']
     },
     product_shop:{
-        type: String,
+        type: Schema.Types.ObjectId,
+        ref: "Shop",
         required: true
     },
     product_attributes:{
-        type: String,
+        type: Schema.Types.Mixed,
         required: true
     },
 },{
