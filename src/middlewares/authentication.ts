@@ -13,6 +13,10 @@ declare global {
   namespace Express {
     interface Request {
       keyStore: any;
+      user: {
+        userId: string,
+        email: string
+      }
     }
   }
 }
@@ -36,6 +40,7 @@ export const authentication = async (
   ) as { userId: string; email: string };
 
   req.keyStore = keyStore;
+  req.user = decodedUser;
 
   if (decodedUser.userId !== userID) {
     throw new NotAuthorizeError();

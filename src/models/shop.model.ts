@@ -62,21 +62,22 @@ const shopSchema = new mongoose.Schema(
   {
     timestamps: true,
     collection: COLLECTION_NAME,
-    toJSON:{
-      transform(doc, ret){
-        ret.id = ret._id
-        delete ret._id
-        delete ret.password
-        delete ret.verify
-        delete ret.roles
-        delete ret.status
+    toJSON: {
+      transform(doc, ret) {
+        ret.id = ret._id;
+        delete ret._id;
+        delete ret.password;
+        delete ret.verify;
+        delete ret.roles;
+        delete ret.status;
         delete ret.createdAt;
         delete ret.updatedAt;
         delete ret.__v;
-      }
-    }
+      },
+    },
   }
 );
+
 
 shopSchema.statics.build = (attrs: ShopAttrs): ShopDocs => {
   return new Shop(attrs);

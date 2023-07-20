@@ -3,13 +3,15 @@ import mongoose from 'mongoose';
 const COLLECTION_NAME = 'Clothing';
 const DOCUMENT_NAME = 'Clothing';
 
-interface ClothingAttrs {
+export interface ClothingAttrs {
+  product_shop: string;
   brand: string;
   size: string;
   material: string;
 }
 
 interface ClothingDocs extends mongoose.Document {
+  product_shop: string;
   brand: string;
   size: string;
   material: string;
@@ -21,6 +23,10 @@ interface ClothingModel extends mongoose.Model<ClothingDocs> {
 
 const ClothingSchema = new mongoose.Schema(
   {
+    product_shop:{
+      type: mongoose.Types.ObjectId,
+      require
+    },
     brand: {
       type: String,
       required: true,
@@ -39,12 +45,12 @@ const ClothingSchema = new mongoose.Schema(
 );
 
 ClothingSchema.statics.build = (attrs: ClothingAttrs) => {
-  return new Clothing(attrs);
+  return new clothing(attrs);
 };
 
-const Clothing = mongoose.model<ClothingDocs, ClothingModel>(
+const clothing = mongoose.model<ClothingDocs, ClothingModel>(
   DOCUMENT_NAME,
   ClothingSchema
 );
 
-export { Clothing };
+export { clothing };
