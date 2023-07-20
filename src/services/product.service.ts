@@ -4,6 +4,7 @@ import { BadRequestError } from '../errors/badRequestError';
 import { InternalServerError } from '../errors/InternalServerError';
 import {
   findAllDraftsForShop,
+  findAllPublishedForShop,
   publishProductByShop,
 } from '../models/repositories/product.repo';
 
@@ -30,15 +31,48 @@ export class ProductFactory {
     skip?: number;
     product_shop: string;
   }) {
-    const query = { product_shop, isDraft: true };
     try {
-      const productDrafts = await findAllDraftsForShop(query, limit, skip);
-      console.log(query);
+      const productDrafts = await findAllDraftsForShop(
+        product_shop,
+        limit,
+        skip
+      );
+
+      console.log(product_shop);
 
       return {
         code: 200,
         metadata: {
           products: productDrafts,
+        },
+      };
+    } catch (error) {
+      throw new InternalServerError();
+    }
+  }
+
+  static async findAllPublishedForShop({
+    product_shop,
+    limit = 50,
+    skip = 0,
+  }: {
+    limit?: number;
+    skip?: number;
+    product_shop: string;
+  }) {
+    try {
+      const publishedProducts = await findAllPublishedForShop(
+        product_shop,
+        limit,
+        skip
+      );
+
+      console.log(product_shop);
+
+      return {
+        code: 200,
+        metadata: {
+          products: publishedProducts,
         },
       };
     } catch (error) {

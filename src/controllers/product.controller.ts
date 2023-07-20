@@ -28,13 +28,31 @@ class ProductController {
       next(error);
     }
   }
+  
+  async findAllPublishedForShop(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    const { skip, limit } = req.query;
+
+    try {
+      res.status(200).send(
+        await ProductFactory.findAllPublishedForShop({
+          product_shop: req.user.userId,
+        })
+      );
+    } catch (error) {
+      next(error);
+    }
+  }
 
   async publishProductByShop(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
       res.status(200).send(
         await ProductFactory.publishProductByShop({
-          _id:id,
+          _id: id,
           product_shop: req.user.userId,
         })
       );

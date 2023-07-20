@@ -1,15 +1,13 @@
-import express from 'express'
-import { authentication } from '../../middlewares/authentication'
-import { productController } from '../../controllers/product.controller'
+import express from 'express';
+import { authentication } from '../../middlewares/authentication';
+import { productController } from '../../controllers/product.controller';
 
-const router = express.Router()
+const router = express.Router();
 
+router.use(authentication);
+router.post('/', productController.createProduct);
+router.get('/drafts/all', productController.findAllDraftsForShop);
+router.post('/published/:id', productController.publishProductByShop);
+router.get('/published/all', productController.findAllPublishedForShop);
 
-router.use(authentication)
-router.post('/', productController.createProduct)
-router.get('/drafts/all', productController.findAllDraftsForShop)
-router.post('/publish/:id', productController.publishProductByShop)
-
-export {
-    router
-}
+export { router };
