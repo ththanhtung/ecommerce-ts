@@ -2,6 +2,7 @@ import { product, ProductAttrs } from '../models/product.model';
 import { clothing } from '../models/clothing.model';
 import { BadRequestError } from '../errors/badRequestError';
 import { InternalServerError } from '../errors/InternalServerError';
+import { findAllDraftsForShop } from '../models/repositories/product.repo';
 
 export class ProductFactory {
   static productRegistry: { [k: string]: any } = {};
@@ -15,6 +16,31 @@ export class ProductFactory {
     }
 
     return new productClass(payload).createProduct();
+  }
+
+  static async findAllDraftsForShop({
+    product_shop,
+    limit = 50,
+    skip = 0,
+  }: {
+    limit?: number;
+    skip?: number;
+    product_shop: string;
+  }) {
+    const query = { product_shop, isDraft: true };
+    try {
+      const productDrafts = await findAllDraftsForShop(query, limit, skip);
+      console.log(query);
+
+      return {
+        code: 200,
+        metadata: {
+          products: productDrafts,
+        },
+      };
+    } catch (error) {
+      throw new InternalServerError();
+    }
   }
 }
 
@@ -75,7 +101,7 @@ class Clothing extends Product {
     try {
       await newClothing.save();
     } catch (error) {
-      if (error instanceof Error){
+      if (error instanceof Error) {
         console.log(error.message);
         throw new InternalServerError();
       }
