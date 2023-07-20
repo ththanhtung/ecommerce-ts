@@ -28,7 +28,7 @@ class ProductController {
       next(error);
     }
   }
-  
+
   async findAllPublishedForShop(
     req: Request,
     res: Response,
@@ -52,6 +52,20 @@ class ProductController {
       const { id } = req.params;
       res.status(200).send(
         await ProductFactory.publishProductByShop({
+          _id: id,
+          product_shop: req.user.userId,
+        })
+      );
+    } catch (error) {
+      next(error);
+    }
+  
+  }
+  async draftProductByShop(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { id } = req.params;
+      res.status(200).send(
+        await ProductFactory.draftProductByShop({
           _id: id,
           product_shop: req.user.userId,
         })

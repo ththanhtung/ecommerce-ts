@@ -41,4 +41,21 @@ const publishProductByShop = async (_id: string, product_shop: string) => {
     .lean();
 };
 
-export { findAllDraftsForShop, publishProductByShop, findAllPublishedForShop };
+const draftProductByShop = async (_id: string, product_shop: string) => {
+  return await product
+    .findOneAndUpdate(
+      {
+        _id: new Types.ObjectId(_id),
+        product_shop: new Types.ObjectId(product_shop),
+      },
+      { $set: { isPublished: false, isDraft: true } }
+    )
+    .lean();
+};
+
+export {
+  findAllDraftsForShop,
+  publishProductByShop,
+  findAllPublishedForShop,
+  draftProductByShop,
+};

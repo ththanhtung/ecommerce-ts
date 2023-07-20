@@ -3,6 +3,7 @@ import { clothing } from '../models/clothing.model';
 import { BadRequestError } from '../errors/badRequestError';
 import { InternalServerError } from '../errors/InternalServerError';
 import {
+  draftProductByShop,
   findAllDraftsForShop,
   findAllPublishedForShop,
   publishProductByShop,
@@ -93,6 +94,26 @@ export class ProductFactory {
         code: 200,
         metadata: {
           product: publishedProduct,
+        },
+      };
+    } catch (error) {
+      throw new InternalServerError();
+    }
+  }
+
+  static async draftProductByShop({
+    product_shop,
+    _id,
+  }: {
+    product_shop: string;
+    _id: string;
+  }) {
+    try {
+      const draftedProduct = await draftProductByShop(_id, product_shop);
+      return {
+        code: 200,
+        metadata: {
+          product: draftedProduct,
         },
       };
     } catch (error) {
