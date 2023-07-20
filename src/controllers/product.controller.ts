@@ -24,7 +24,23 @@ class ProductController {
           product_shop: req.user.userId,
         })
       );
-    } catch (error) {}
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async publishProductByShop(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { id } = req.params;
+      res.status(200).send(
+        await ProductFactory.publishProductByShop({
+          _id:id,
+          product_shop: req.user.userId,
+        })
+      );
+    } catch (error) {
+      next(error);
+    }
   }
 }
 

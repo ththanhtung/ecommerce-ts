@@ -2,7 +2,10 @@ import { product, ProductAttrs } from '../models/product.model';
 import { clothing } from '../models/clothing.model';
 import { BadRequestError } from '../errors/badRequestError';
 import { InternalServerError } from '../errors/InternalServerError';
-import { findAllDraftsForShop } from '../models/repositories/product.repo';
+import {
+  findAllDraftsForShop,
+  publishProductByShop,
+} from '../models/repositories/product.repo';
 
 export class ProductFactory {
   static productRegistry: { [k: string]: any } = {};
@@ -36,6 +39,26 @@ export class ProductFactory {
         code: 200,
         metadata: {
           products: productDrafts,
+        },
+      };
+    } catch (error) {
+      throw new InternalServerError();
+    }
+  }
+
+  static async publishProductByShop({
+    product_shop,
+    _id,
+  }: {
+    product_shop: string;
+    _id: string;
+  }) {
+    try {
+      const publishedProduct = await publishProductByShop(_id, product_shop);
+      return {
+        code: 200,
+        metadata: {
+          product: publishedProduct,
         },
       };
     } catch (error) {
