@@ -7,6 +7,7 @@ import {
   findAllDraftsForShop,
   findAllPublishedForShop,
   publishProductByShop,
+  searchForPublishedProducts,
 } from '../models/repositories/product.repo';
 
 export class ProductFactory {
@@ -114,6 +115,21 @@ export class ProductFactory {
         code: 200,
         metadata: {
           product: draftedProduct,
+        },
+      };
+    } catch (error) {
+      throw new InternalServerError();
+    }
+  }
+  static async searchForPublishedProduct({ keyword }: { keyword: string }) {
+    try {
+      console.log(keyword);
+      
+      const products = await searchForPublishedProducts(keyword);
+      return {
+        code: 200,
+        metadata: {
+          products,
         },
       };
     } catch (error) {

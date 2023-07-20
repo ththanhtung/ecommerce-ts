@@ -53,9 +53,30 @@ const draftProductByShop = async (_id: string, product_shop: string) => {
     .lean();
 };
 
+const searchForPublishedProducts =async (keyword: string)=>{
+    const regexSearch = new RegExp(`${keyword}`)
+    console.log(regexSearch.source);
+    
+    return await product.find({
+      $text: {
+        $search: regexSearch.source,
+      },
+      isPublished: true
+    }, {
+        score: {
+            $meta: 'textScore'
+        }
+    }).sort({
+        score: {
+            $meta: 'textScore'
+        }
+    }).lean();
+}
+
 export {
   findAllDraftsForShop,
   publishProductByShop,
   findAllPublishedForShop,
   draftProductByShop,
+  searchForPublishedProducts,
 };

@@ -4,6 +4,8 @@ import { productController } from '../../controllers/product.controller';
 
 const router = express.Router();
 
+router.get('/published', productController.searchForPublishedProduct)
+
 router.use(authentication);
 router.post('/', productController.createProduct);
 

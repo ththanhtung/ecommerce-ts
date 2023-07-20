@@ -11,8 +11,8 @@ router.use(checkAuth)
 // check permission
 router.use(permission('001'))
 
-router.use('/v1/api', authRoutes)
 router.use('/v1/api/product', productRoutes)
+router.use('/v1/api', authRoutes)
 
 export {
     router

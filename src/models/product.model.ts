@@ -94,6 +94,9 @@ const productSchema = new mongoose.Schema(
   }
 );
 
+// indexing product name and description for full text search
+productSchema.index({product_name: 'text', product_desc: 'text'})
+
 productSchema.pre('save', function (next) {
   const product_slug = slugify(this.get('product_name'), { lower: true });
   this.set('product_slug', product_slug);

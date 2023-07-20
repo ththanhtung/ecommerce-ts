@@ -59,7 +59,6 @@ class ProductController {
     } catch (error) {
       next(error);
     }
-  
   }
   async draftProductByShop(req: Request, res: Response, next: NextFunction) {
     try {
@@ -70,6 +69,22 @@ class ProductController {
           product_shop: req.user.userId,
         })
       );
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async searchForPublishedProduct(
+    req: Request<{}, {}, {}, { keyword: string }>,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      const { keyword } = req.query;
+      
+      res
+        .status(200)
+        .send(await ProductFactory.searchForPublishedProduct({ keyword }));
     } catch (error) {
       next(error);
     }
