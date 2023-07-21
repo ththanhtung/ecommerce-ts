@@ -91,17 +91,28 @@ class ProductController {
   }
 
   async findAllProducts(
-    req: Request<{}, {}, {}, {page: number, limit: number, sortBy: string}>,
+    req: Request<{}, {}, {}, { page: number; limit: number; sortBy: string }>,
     res: Response,
     next: NextFunction
-  ){
+  ) {
     try {
-      const {page, limit, sortBy} = req.query
-      res.send(await ProductFactory.findAllProducts({page, limit, sort: sortBy}))
+      const { page, limit, sortBy } = req.query;
+      res.send(
+        await ProductFactory.findAllProducts({ page, limit, sort: sortBy })
+      );
     } catch (error) {
-      next(error)
+      next(error);
     }
-  };
+  }
+
+  async findProductByID(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { id } = req.params;
+      res.send(await ProductFactory.findProductByID(id));
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 const productController = new ProductController();

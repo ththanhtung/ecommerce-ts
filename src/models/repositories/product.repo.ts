@@ -1,6 +1,6 @@
 import { Types } from 'mongoose';
 import { product } from '../product.model';
-import { getSelectData } from '../../helpers/selectData';
+import { getSelectData, unSelectData } from '../../helpers/selectData';
 
 const findAllDraftsForShop = async (
   product_shop: string,
@@ -101,7 +101,15 @@ const findAllProducts = async (
     .lean();
 };
 
+const findProductByID = async (_id: string, unSelect: string[]) => {
+  return await product
+    .findOne({ _id, isPublished: true })
+    .select(unSelectData(unSelect))
+    .lean();
+};
+
 export {
+  findProductByID,
   findAllProducts,
   findAllDraftsForShop,
   publishProductByShop,

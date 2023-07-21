@@ -9,6 +9,7 @@ import {
   findAllPublishedForShop,
   publishProductByShop,
   searchForPublishedProducts,
+  findProductByID,
 } from '../models/repositories/product.repo';
 
 export class ProductFactory {
@@ -155,6 +156,21 @@ export class ProductFactory {
         code: 200,
         metadata: {
           products,
+        },
+      };
+    } catch (error) {
+      throw new InternalServerError();
+    }
+  }
+
+  static async findProductByID(_id: string) {
+    try {
+      const unSelect = ['__v'];
+      const product = await findProductByID(_id, unSelect);
+      return {
+        code: 200,
+        metadata: {
+          product,
         },
       };
     } catch (error) {
