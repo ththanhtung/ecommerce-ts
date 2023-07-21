@@ -1,5 +1,6 @@
 import { Types } from 'mongoose';
 import { product } from '../product.model';
+import { getSelectData } from '../../helpers/selectData';
 
 const findAllDraftsForShop = async (
   product_shop: string,
@@ -53,27 +54,55 @@ const draftProductByShop = async (_id: string, product_shop: string) => {
     .lean();
 };
 
-const searchForPublishedProducts =async (keyword: string)=>{
-    const regexSearch = new RegExp(`${keyword}`)
-    console.log(regexSearch.source);
-    
-    return await product.find({
-      $text: {
-        $search: regexSearch.source,
+const searchForPublishedProducts = async (keyword: string) => {
+  const regexSearch = new RegExp(`${keyword}`);
+  console.log(regexSearch);
+
+  return await product
+    .find(
+      {
+        $text: {
+          $search: regexSearch.source,
+        },
+        isPublished: true,
       },
-      isPublished: true
-    }, {
+      {
         score: {
-            $meta: 'textScore'
-        }
-    }).sort({
-        score: {
-            $meta: 'textScore'
-        }
-    }).lean();
-}
+          $meta: 'textScore',
+        },
+      }
+    )
+    .sort({
+      score: {
+        $meta: 'textScore',
+      },
+    })
+    .lean();
+};
+
+const findAllProducts = async (
+  filter: any,
+  select: string[],
+  sort: string,
+  limit: number,
+  page: number
+) => {
+  const sortBy: { [k: string]: any } =
+    sort === 'ctime' ? { _id: -1 } : { _id: 1 };
+
+  const skip = (page - 1) * limit;
+
+  return await product
+    .find(filter)
+    .sort(sortBy)
+    .skip(skip)
+    .limit(limit)
+    .select(getSelectData(select))
+    .lean();
+};
 
 export {
+  findAllProducts,
   findAllDraftsForShop,
   publishProductByShop,
   findAllPublishedForShop,

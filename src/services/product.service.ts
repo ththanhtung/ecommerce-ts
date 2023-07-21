@@ -5,6 +5,7 @@ import { InternalServerError } from '../errors/InternalServerError';
 import {
   draftProductByShop,
   findAllDraftsForShop,
+  findAllProducts,
   findAllPublishedForShop,
   publishProductByShop,
   searchForPublishedProducts,
@@ -124,8 +125,32 @@ export class ProductFactory {
   static async searchForPublishedProduct({ keyword }: { keyword: string }) {
     try {
       console.log(keyword);
-      
+
       const products = await searchForPublishedProducts(keyword);
+      return {
+        code: 200,
+        metadata: {
+          products,
+        },
+      };
+    } catch (error) {
+      throw new InternalServerError();
+    }
+  }
+  static async findAllProducts({
+    filter = { isPublished: true },
+    sort = 'ctime',
+    limit = 50,
+    page = 1,
+  }: {
+    filter?: any;
+    sort?: string;
+    limit?: number;
+    page?: number;
+  }) {
+    try {
+      const select = ['product_name', 'product_price'];
+      const products = await findAllProducts(filter, select, sort, limit, page);
       return {
         code: 200,
         metadata: {

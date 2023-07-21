@@ -81,7 +81,7 @@ class ProductController {
   ) {
     try {
       const { keyword } = req.query;
-      
+
       res
         .status(200)
         .send(await ProductFactory.searchForPublishedProduct({ keyword }));
@@ -89,6 +89,19 @@ class ProductController {
       next(error);
     }
   }
+
+  async findAllProducts(
+    req: Request<{}, {}, {}, {page: number, limit: number, sortBy: string}>,
+    res: Response,
+    next: NextFunction
+  ){
+    try {
+      const {page, limit, sortBy} = req.query
+      res.send(await ProductFactory.findAllProducts({page, limit, sort: sortBy}))
+    } catch (error) {
+      next(error)
+    }
+  };
 }
 
 const productController = new ProductController();
