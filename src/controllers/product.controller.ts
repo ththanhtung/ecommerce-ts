@@ -15,6 +15,25 @@ class ProductController {
     }
   }
 
+  async updateProduct(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { id } = req.params;
+      
+      res.status(200).send(
+        await ProductFactory.updateProduct(req.body.product_type, id, {
+          ...req.body,
+          product_shop: req.user.userId,
+        })
+      );
+    } catch (error) {
+      if(error instanceof Error){
+        console.log(error.message);
+        next(error);
+        
+      }
+    }
+  }
+
   async findAllDraftsForShop(req: Request, res: Response, next: NextFunction) {
     const { skip, limit } = req.query;
 

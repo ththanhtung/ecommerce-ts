@@ -1,4 +1,4 @@
-import { Types } from 'mongoose';
+import mongoose, { Types } from 'mongoose';
 import { product } from '../product.model';
 import { getSelectData, unSelectData } from '../../helpers/selectData';
 
@@ -108,7 +108,16 @@ const findProductByID = async (_id: string, unSelect: string[]) => {
     .lean();
 };
 
+const updateProductByID = async (id: string, model: any, bodyUpdate: any) => {
+  return await model.findByIdAndUpdate(
+    { _id: new Types.ObjectId(id) },
+    bodyUpdate,
+    { new: true }
+  );
+};
+
 export {
+  updateProductByID,
   findProductByID,
   findAllProducts,
   findAllDraftsForShop,

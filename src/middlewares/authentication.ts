@@ -2,6 +2,8 @@ import { NextFunction, Request, Response } from 'express';
 import { NotAuthorizeError } from '../errors/notAuthorizeError';
 import { KeytokenService } from '../services/keyToken.service';
 import jwt from 'jsonwebtoken';
+import { ForbiddenError } from '../errors/forbiddenError';
+import { CustomError } from '../errors/customError';
 
 const HEADERS = {
   AUTH: 'authorization',
@@ -14,9 +16,9 @@ declare global {
     interface Request {
       keyStore: any;
       user: {
-        userId: string,
-        email: string
-      }
+        userId: string;
+        email: string;
+      };
     }
   }
 }
@@ -28,23 +30,26 @@ export const authentication = async (
 ) => {
   const userID = req.headers[HEADERS.CLIENT_ID] as string;
   if (!userID) {
-    throw new NotAuthorizeError();
+    next(new NotAuthorizeError());
   }
 
   const keyStore = await KeytokenService.findByUserID(userID);
 
   const accessToken = req.headers[HEADERS.AUTH] as string;
-  const decodedUser = jwt.verify(
-    accessToken,
-    keyStore?.publicKey as string
-  ) as { userId: string; email: string };
 
-  req.keyStore = keyStore;
-  req.user = decodedUser;
+  try {
+    const decodedUser = jwt.verify(
+      accessToken,
+      keyStore?.publicKey as string
+    ) as { userId: string; email: string };
+    req.keyStore = keyStore;
+    req.user = decodedUser;
 
-  if (decodedUser.userId !== userID) {
-    throw new NotAuthorizeError();
+    if (decodedUser.userId !== userID) {
+      next(new NotAuthorizeError());
+    }
+  } catch (error) {
+    next(new ForbiddenError());
   }
-
   next();
 };

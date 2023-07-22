@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { findByID } from '../services/apiKey.service';
-import { apiKey } from '../models/apiKey.model';
+import { ForbiddenError } from '../errors/forbiddenError';
 
 const HEADER = {
   apiKey: 'x-api-key',
@@ -35,7 +35,9 @@ const checkAuth = async (req: Request, res: Response, next: NextFunction) => {
     }
     req.objKey = objKey;
     next();
-  } catch (error) {}
+  } catch (error) {
+    throw new ForbiddenError()
+  }
 };
 
 const permission = (permission: string) => {

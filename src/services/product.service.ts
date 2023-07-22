@@ -10,7 +10,10 @@ import {
   publishProductByShop,
   searchForPublishedProducts,
   findProductByID,
+  updateProductByID,
 } from '../models/repositories/product.repo';
+import { removeNullAttrs } from '../helpers/removeNullAtrrs';
+import { updateNestedObj } from '../helpers/updateNestedObj';
 
 export class ProductFactory {
   static productRegistry: { [k: string]: any } = {};
@@ -24,6 +27,14 @@ export class ProductFactory {
     }
 
     return new productClass(payload).createProduct();
+  }
+  static async updateProduct(type: string, id: string, payload: ProductAttrs) {
+    const productClass = this.productRegistry[type];
+    if (!productClass) {
+      throw new BadRequestError('invalid product type');
+    }
+
+    return new productClass(payload).updateProduct(id);
   }
 
   static async findAllDraftsForShop({
@@ -220,6 +231,15 @@ class Product {
     await newProduct.save();
     return newProduct;
   }
+
+  async updateProduct(id: string, model: any, updateContent: any) {
+    try {
+      const updatedProduct = await updateProductByID(id, model, updateContent);
+      return updatedProduct;
+    } catch (error) {
+      throw new InternalServerError();
+    }
+  }
 }
 
 class Clothing extends Product {
@@ -251,6 +271,24 @@ class Clothing extends Product {
     } catch (error) {
       throw new InternalServerError();
     }
+  }
+  async updateProduct(id: string) {
+    const objectParams = removeNullAttrs(this);
+
+    if (objectParams.product_attributes) {
+      const updatedContent = updateNestedObj(objectParams);
+      console.log(updatedContent);
+
+      await updateProductByID(
+        id,
+        clothing,
+        updateNestedObj(objectParams.product_attributes)
+      );
+    }
+
+    const updatedProduct = await super.updateProduct(id, product, updateNestedObj(objectParams));
+
+    return updatedProduct;
   }
 }
 
