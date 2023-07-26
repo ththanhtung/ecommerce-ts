@@ -155,7 +155,10 @@ export class DiscountService {
     discount_shop_id: string;
     userId: string;
     discount_code: string;
-    products: any[];
+    products: {
+      price: number,
+      quantity: number
+    }[];
   }) {
     let foundDiscount:
       | (FlattenMaps<DiscountDocs> & {
@@ -170,8 +173,9 @@ export class DiscountService {
     } catch (error) {
       throw new InternalServerError();
     }
-    if (!foundDiscount || !foundDiscount.discount_is_active) {
-      throw new NotFoundError();
+
+    if (!foundDiscount || foundDiscount.discount_is_active === false) {
+      throw new NotFoundError(); 
     }
 
     const {
@@ -207,6 +211,7 @@ export class DiscountService {
     if (discount_min_order_value < 0) {
       throw new InternalServerError();
     }
+    
 
     const totalBeforeDiscount = products.reduce((acc: number, product: any) => {
       return acc + (product.price * product.quantity);

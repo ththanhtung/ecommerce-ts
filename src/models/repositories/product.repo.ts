@@ -116,6 +116,24 @@ const updateProductByID = async (id: string, model: any, bodyUpdate: any) => {
   );
 };
 
+const findSelectedProducts = async (productIds: Types.ObjectId[]) => {
+  return await product.aggregate([
+    {
+      $match: {
+        _id: {
+          $in: productIds,
+        },
+      },
+    },
+    {
+      $project: {
+        price: '$product_price',
+        quantity: '$product_quantity',
+      },
+    },
+  ]);
+};
+
 export {
   updateProductByID,
   findProductByID,
@@ -125,4 +143,5 @@ export {
   findAllPublishedForShop,
   draftProductByShop,
   searchForPublishedProducts,
+  findSelectedProducts,
 };
