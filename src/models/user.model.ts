@@ -44,7 +44,7 @@ const userSchema = new mongoose.Schema({
         type: Number,
     },
     user_has_shop: {
-        type: String,
+        type: Boolean,
         default: false,
     }
 }, {
@@ -56,4 +56,4 @@ userSchema.statics.build = (attrs: UserAttrs)=>{
     return new User(attrs)
 }
 
-const User = mongoose.model<UserDocs, UserModel>(COLLECTION_NAME, userSchema)
+const User = mongoose.model<UserDocs, UserModel>(DOCUMENT_NAME, userSchema);
