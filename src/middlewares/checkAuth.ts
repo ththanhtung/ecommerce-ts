@@ -36,7 +36,7 @@ const checkAuth = async (req: Request, res: Response, next: NextFunction) => {
     req.objKey = objKey;
     next();
   } catch (error) {
-    throw new ForbiddenError()
+    throw new ForbiddenError();
   }
 };
 

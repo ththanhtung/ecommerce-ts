@@ -35,7 +35,6 @@ enum Roles {
 
 class AuthService {
   static async refeshToken({ refeshToken }: { refeshToken: string }) {
-    
     const isUsed = await KeytokenService.findByUsedRefeshToken(refeshToken);
     console.log('isUsed:', isUsed.length);
     if (isUsed.length > 0) {
@@ -51,12 +50,14 @@ class AuthService {
     const decodedUser = jwt.verify(refeshToken, keyToken.publicKey) as {
       userId: string;
       email: string;
+      roles: string[]
     };
 
     const tokens = await createTokensPair(
       {
         userId: decodedUser.userId,
         email: decodedUser.email,
+        roles: decodedUser.roles
       },
       keyToken.privateKey,
       keyToken.publicKey
@@ -73,7 +74,7 @@ class AuthService {
       });
     } catch (error) {
       if (error instanceof Error) {
-        throw new InternalServerError()
+        throw new InternalServerError();
       }
     }
 
@@ -98,7 +99,7 @@ class AuthService {
       throw new BadRequestError('shop not found');
     }
 
-    const matchPassword = bcrypt.compare(password, foundShop.password);
+    const matchPassword = await bcrypt.compare(password, foundShop.password);
     if (!matchPassword) {
       throw new NotAuthorizeError();
     }
@@ -116,7 +117,7 @@ class AuthService {
     });
 
     const tokens = await createTokensPair(
-      { userId: foundShop._id, email },
+      { userId: foundShop._id, email, roles: foundShop.roles},
       privateKey,
       publicKey
     );
@@ -130,7 +131,7 @@ class AuthService {
 
     return {
       code: 200,
-      metadata: { foundShop, tokens },
+      metadata: { shop: { id: foundShop._id, ...foundShop }, tokens },
     };
   }
 
@@ -192,7 +193,7 @@ class AuthService {
       let tokens: { accessToken: string; refeshToken: string } | undefined;
       if (typeof publicKey === 'string') {
         tokens = await createTokensPair(
-          { userId: newShop._id, email },
+          { userId: newShop._id, email, roles: newShop.roles},
           privateKey,
           publicKey
         );

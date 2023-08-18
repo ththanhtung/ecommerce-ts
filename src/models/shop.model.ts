@@ -68,7 +68,6 @@ const shopSchema = new mongoose.Schema(
         delete ret._id;
         delete ret.password;
         delete ret.verify;
-        delete ret.roles;
         delete ret.status;
         delete ret.createdAt;
         delete ret.updatedAt;

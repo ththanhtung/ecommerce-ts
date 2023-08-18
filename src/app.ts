@@ -6,6 +6,7 @@ import { dbInstance } from './database/init.database'
 import { OverloadCheck } from './helpers/check.connection'
 import { router } from './routes'
 import { errorHandler } from './middlewares/errorsHander'
+import cors from 'cors'
 
 
 const app = express()
@@ -18,6 +19,9 @@ app.use(express.urlencoded({
 app.use(morgan('dev'))
 app.use(helmet())
 app.use(compression())
+app.use(cors({
+    origin: "*"
+}))
 
 // init database
 const db = dbInstance

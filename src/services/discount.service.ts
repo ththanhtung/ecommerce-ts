@@ -96,7 +96,7 @@ export class DiscountService {
             page
           );
           console.log(foundDiscount.discount_product_ids);
-  
+
           return {
             code: 200,
             metadata: {
@@ -104,9 +104,8 @@ export class DiscountService {
             },
           };
         } catch (error) {
-          if (error instanceof Error){
+          if (error instanceof Error) {
             console.log(error.message);
-            
           }
         }
       }
@@ -156,8 +155,8 @@ export class DiscountService {
     userId: string;
     discount_code: string;
     products: {
-      price: number,
-      quantity: number
+      price: number;
+      quantity: number;
     }[];
   }) {
     let foundDiscount:
@@ -175,7 +174,7 @@ export class DiscountService {
     }
 
     if (!foundDiscount || foundDiscount.discount_is_active === false) {
-      throw new NotFoundError(); 
+      throw new NotFoundError();
     }
 
     const {
@@ -211,11 +210,10 @@ export class DiscountService {
     if (discount_min_order_value < 0) {
       throw new InternalServerError();
     }
-    
 
     const totalBeforeDiscount = products.reduce((acc: number, product: any) => {
-      return acc + (product.price * product.quantity);
-    },0);
+      return acc + product.price * product.quantity;
+    }, 0);
 
     let discountAmount: number = 0;
 
@@ -224,7 +222,7 @@ export class DiscountService {
     }
 
     if (discount_type === 'percentage') {
-      discountAmount = totalBeforeDiscount * (discount_value/100);
+      discountAmount = totalBeforeDiscount * (discount_value / 100);
     }
 
     return {

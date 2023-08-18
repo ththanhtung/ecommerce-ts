@@ -54,7 +54,7 @@ export class CheckoutService {
       totalPriceAfterDiscount: 0,
     };
 
-    const shopOrderNew: any[] = []
+    const shopOrderNew: any[] = [];
 
     for (let i = 0; i < shop_orders.length; i++) {
       const { shopId, shopDiscounts, itemProducts } = shop_orders[i];
@@ -67,14 +67,13 @@ export class CheckoutService {
         checkoutProductIds
       )) as { price: number; quantity: number }[];
 
-      for (let i = 0; i < checkoutProducts.length; i++){
-        if (checkoutProducts[i].price !== itemProducts[i].price){
-          throw new BadRequestError('price unmatch')
+      for (let i = 0; i < checkoutProducts.length; i++) {
+        if (checkoutProducts[i].price !== itemProducts[i].price) {
+          throw new BadRequestError('price unmatch');
         }
       }
 
       // console.log(checkoutProducts);
-      
 
       if (!checkoutProducts[0]) {
         throw new BadRequestError('order wrong!');
@@ -113,26 +112,25 @@ export class CheckoutService {
             discount_code: shopDiscounts[i].discountCode,
             products: itemProducts,
           });
-          checkoutOrder.totalDiscount += discount
+          checkoutOrder.totalDiscount += discount;
 
-          if (discount > 0){
-            itemCheckout.priceAfterDiscount -= discount
+          if (discount > 0) {
+            itemCheckout.priceAfterDiscount -= discount;
           }
         }
       }
- 
-      checkoutOrder.totalPriceAfterDiscount += itemCheckout.priceAfterDiscount
 
-      shopOrderNew.push(itemCheckout)
+      checkoutOrder.totalPriceAfterDiscount += itemCheckout.priceAfterDiscount;
+
+      shopOrderNew.push(itemCheckout);
     }
 
     console.log(shopOrderNew);
-    
 
     return {
       shop_orders,
       shopOrderNew,
-      checkoutOrder
-    }
+      checkoutOrder,
+    };
   }
 }

@@ -3,6 +3,7 @@ import jwt from 'jsonwebtoken';
 interface IPayloadAttrs {
   userId: string;
   email: string;
+  roles: string[]
 }
 
 const createTokensPair = async (

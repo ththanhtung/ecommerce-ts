@@ -286,7 +286,11 @@ class Clothing extends Product {
       );
     }
 
-    const updatedProduct = await super.updateProduct(id, product, updateNestedObj(objectParams));
+    const updatedProduct = await super.updateProduct(
+      id,
+      product,
+      updateNestedObj(objectParams)
+    );
 
     return updatedProduct;
   }
