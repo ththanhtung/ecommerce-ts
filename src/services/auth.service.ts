@@ -8,6 +8,7 @@ import { BadRequestError } from '../errors/badRequestError';
 import { NotAuthorizeError } from '../errors/notAuthorizeError';
 import jwt from 'jsonwebtoken';
 import { InternalServerError } from '../errors/InternalServerError';
+import { ForbiddenError } from '../errors/forbiddenError';
 
 interface ISignupAttrs {
   name: string;
@@ -37,14 +38,19 @@ class AuthService {
   static async refeshToken({ refeshToken }: { refeshToken: string }) {
     const isUsed = await KeytokenService.findByUsedRefeshToken(refeshToken);
     console.log('isUsed:', isUsed.length);
+    console.log(refeshToken);
+    
     if (isUsed.length > 0) {
-      throw new NotAuthorizeError();
+      console.log("used token");
+      
+      throw new ForbiddenError();
     }
 
     const keyToken = await KeytokenService.findByRefeshToken(refeshToken);
 
     if (!keyToken) {
-      throw new NotAuthorizeError();
+      console.log('cannot find key token');
+      throw new ForbiddenError();
     }
 
     const decodedUser = jwt.verify(refeshToken, keyToken.publicKey) as {

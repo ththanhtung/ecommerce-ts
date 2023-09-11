@@ -4,7 +4,7 @@ import { router as productRoutes } from './product'
 import { router as discountRoutes } from './discount'
 import { router as cartRoutes } from './cart'
 import { router as checkoutRoutes } from './checkout'
-import { checkAuth, permission } from '../middlewares/checkAuth'
+import { checkAuth, permission, permissionCheck } from '../middlewares/checkAuth'
 
 const router = express.Router()
 
@@ -12,7 +12,7 @@ const router = express.Router()
 router.use(checkAuth)
 
 // check permission
-router.use(permission('001'))
+router.use(permissionCheck(['002', '001']))
 
 router.use('/v1/api/cart', cartRoutes)
 router.use('/v1/api/checkout', checkoutRoutes);

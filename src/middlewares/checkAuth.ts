@@ -57,4 +57,25 @@ const permission = (permission: string) => {
   };
 };
 
-export { checkAuth, permission };
+const permissionCheck = (permissions: string[]) => {
+  return function (req: Request, res: Response, next: NextFunction) {
+    if (!req.objKey.permissions) {
+      return res.status(403).send({
+        message: 'permission denied',
+      });
+    }
+
+    const validPermission = req.objKey.permissions.find((permission) =>
+      permissions.includes(permission)
+    );
+    if (!validPermission) {
+      return res.status(403).send({
+        message: 'permission denied',
+      });
+    }
+    
+    next();
+  };
+};
+
+export { checkAuth, permission, permissionCheck };

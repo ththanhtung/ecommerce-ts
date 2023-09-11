@@ -14,7 +14,7 @@ const createTokensPair = async (
   try {
     const accessToken = await jwt.sign(payload, privateKey, {
       algorithm: 'RS256',
-      expiresIn: '5 hours',
+      expiresIn: '1 days',
     });
     const refeshToken = await jwt.sign(payload, privateKey, {
       algorithm: 'RS256',

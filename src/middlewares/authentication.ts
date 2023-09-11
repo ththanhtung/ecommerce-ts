@@ -29,13 +29,16 @@ export const authentication = async (
   next: NextFunction
 ) => {
   const userID = req.headers[HEADERS.CLIENT_ID] as string;
+  console.log("user id:", userID);
+  
   if (!userID) {
     next(new NotAuthorizeError());
   }
 
   const keyStore = await KeytokenService.findByUserID(userID);
 
-  const accessToken = req.headers[HEADERS.AUTH] as string;
+  let accessToken = req.headers[HEADERS.AUTH] as string;
+  accessToken = accessToken.replace('Bearer ', '');  
 
   try {
     const decodedUser = jwt.verify(

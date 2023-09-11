@@ -19,9 +19,12 @@ app.use(express.urlencoded({
 app.use(morgan('dev'))
 app.use(helmet())
 app.use(compression())
-app.use(cors({
-    origin: "*"
-}))
+app.use(
+  cors({
+    origin: "*",
+    // credentials: true,
+  })
+);
 
 // init database
 const db = dbInstance
