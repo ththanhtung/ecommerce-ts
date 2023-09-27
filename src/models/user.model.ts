@@ -1,4 +1,4 @@
-import mongoose, { Model } from "mongoose"
+import mongoose, { Model, Types } from "mongoose"
 
 const COLLECTION_NAME = 'Users'
 const DOCUMENT_NAME = 'User'
@@ -42,6 +42,9 @@ const userSchema = new mongoose.Schema({
     },
     user_phone: {
         type: Number,
+    },
+    user_shop_id:{
+        type: Types.ObjectId
     },
     user_has_shop: {
         type: Boolean,
